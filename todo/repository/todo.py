@@ -7,7 +7,7 @@ def get_all(db:Session):
     todos= db.query(models.Todo).all()
     return todos
 
-def create(request: schemas.Todo, db:Session):
+def create(db:Session, request: schemas.Todo ):
     new_todo=models.Todo(title=request.title,body=request.body,user_id=1)
     db.add(new_todo)
     db.commit()
@@ -15,7 +15,7 @@ def create(request: schemas.Todo, db:Session):
     return new_todo
 
 
-def destroy(id:int,db:Session):
+def destroy(db:Session, id:int):
     todo = db.query(models.Todo).filter(models.Todo.id==id)
     
     if not todo.first():
@@ -25,7 +25,7 @@ def destroy(id:int,db:Session):
     db.commit()
     return 'done'
 
-def update(id:int,request:schemas.Todo,db:Session):
+def update(db:Session,id:int,request:schemas.Todo):
     todo= db.query(models.Todo).filter(models.Todo.id ==id)
     
     if not todo.first():
@@ -35,7 +35,7 @@ def update(id:int,request:schemas.Todo,db:Session):
     db.commit()
     return 'updated'
 
-def show(id:int,db:Session):
+def show(db:Session,id:int):
     todo = db.query(models.Todo).filter(models.Todo.id==id).first()
     if not todo:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with the id {id} is not available..")
