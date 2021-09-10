@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from ..hashing import Hash
 
 
-def create(request:schemas.User,db:Session):
+def create(db:Session,request:schemas.User):
     hashedPassword= pwd_cxt.hash(request.password)
     new_user= models.User(name=request.name,email=request.email,password=Hash.bcrypt(request.password))
     db.add(new_user)
@@ -12,7 +12,7 @@ def create(request:schemas.User,db:Session):
     db.refresh(new_user)
     return new_user
 
-def show(id:int,db:Session):
+def show(db:Session, id:int):
     user=db.query(models.User).filter(models.User.id==id).first()
     
     if not user:
